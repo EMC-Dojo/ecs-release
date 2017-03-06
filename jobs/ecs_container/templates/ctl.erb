@@ -1,0 +1,33 @@
+#!/bin/bash
+
+RUN_DIR=/var/vcap/sys/run/ecs_container
+LOG_DIR=/var/vcap/sys/log/ecs_container
+PIDFILE=${RUN_DIR}/pid
+
+case $1 in
+
+  start)
+    mkdir -p $RUN_DIR $LOG_DIR
+    chown -R vcap:vcap $RUN_DIR $LOG_DIR
+
+    echo $$ > $PIDFILE
+    
+    cd /var/vcap/packages/ecs_bosh
+
+    exec /var/vcap/packages/python_2.7.13/bin/python \
+      hello.py          
+      >>  $LOG_DIR/ecs_container.stdout.log \
+      2>> $LOG_DIR/ecs_container.stderr.log
+
+    ;;
+
+  stop)
+    kill -9 `cat $PIDFILE`
+    rm -f $PIDFILE
+
+    ;;
+
+  *)
+    echo "Usage: ctl {start|stop}" ;;
+
+esac

@@ -1,0 +1,18 @@
+---
+name: ecs_container
+
+templates:
+  ctl.erb: bin/ctl
+  pre-start.erb: bin/pre-start
+
+consumes:
+- name: docker
+  type: disk
+- name: ecs
+  type: disk
+  
+packages:
+- ecs_bosh
+- ecs_community_edition
+- python_2.7.13
+- docker_1.12.6

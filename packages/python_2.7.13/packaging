@@ -1,0 +1,11 @@
+set -e -x
+
+tar xzf python_2.7.13/python-2.7.13.tgz
+pushd Python-2.7.13/
+  ./configure \
+  --prefix=${BOSH_INSTALL_TARGET}
+  make
+  make install
+  ls -ltra ${BOSH_INSTALL_TARGET}
+  ls -ltra ${BOSH_INSTALL_TARGET}/bin
+popd

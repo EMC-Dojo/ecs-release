@@ -1,0 +1,6 @@
+#!/bin/bash
+
+export PATH=$PATH:/var/vcap/packages/docker_1.12.6
+
+/var/vcap/packages/python_2.7.13/bin/python \
+      /var/vcap/packages/ecs_bosh/pre-start.py /var/vcap/instance/disks/<%= link("docker").p("name") %>

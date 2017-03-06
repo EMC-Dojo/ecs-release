@@ -1,0 +1,8 @@
+---
+name: ecs_community_edition
+
+dependencies:
+
+files:
+- ecs_community_edition/**/*
+- ecs_community_edition/ecs-software-3.0.0.tar.gz # docker pull emccorp/ecs-software-3.0.0 && docker save --output ecs-software-3.0.0.tar emccorp/ecs-software-3.0.0 && gzip ecs-software-3.0.0.tar 

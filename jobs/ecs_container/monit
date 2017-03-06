@@ -1,0 +1,5 @@
+check process ecs_container
+  with pidfile /var/vcap/sys/run/ecs_container/pid
+  start program "/var/vcap/jobs/ecs_container/bin/ctl start"
+  stop program "/var/vcap/jobs/ecs_container/bin/ctl stop"
+  group vcap

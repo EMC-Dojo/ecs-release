@@ -1,0 +1,7 @@
+---
+name: docker_1.12.6
+
+dependencies:
+
+files:
+- docker_1.12.6/docker-1.12.6.tgz # https://get.docker.com/builds/Linux/x86_64/docker-1.12.6.tgz

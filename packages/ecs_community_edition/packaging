@@ -1,0 +1,4 @@
+set -e -x
+
+gzip -d ecs_community_edition/ecs-software-3.0.0.tar.gz
+cp -a ecs_community_edition/* ${BOSH_INSTALL_TARGET}

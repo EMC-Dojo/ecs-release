@@ -1,0 +1,7 @@
+---
+name: ecs_bosh
+
+dependencies:
+
+files:
+- ecs_bosh/**/*

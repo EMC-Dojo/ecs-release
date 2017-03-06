@@ -1,0 +1,5 @@
+set -e -x
+
+tar xzf docker_1.12.6/docker-1.12.6.tgz
+cp -a docker/* ${BOSH_INSTALL_TARGET}
+
