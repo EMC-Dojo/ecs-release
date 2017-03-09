@@ -11,6 +11,7 @@ This module
 import sys
 import os
 import time
+import subprocess
 
 sys.path.insert(0, "/var/vcap/packages/ecs_community_edition/ecs-single-node/")
 import step1_ecs_singlenode_install as CORE
@@ -21,10 +22,23 @@ import step1_ecs_singlenode_install as CORE
 
 IMAGE = "/var/vcap/packages/ecs_community_edition/ecs-software-3.0.0.tar"
 DOCKERVERSION = "1.12.6"
+NETADAPTER = "eth0"
+DOCKERDISK = sys.argv[1]
+USER = "vcap"
+
+find_disk_name = "ls -l %s" % sys.argv[2]
+find_disk_name += r" | awk '{print $NF}' | sed -e 's/\/.*\///g'"
+
+ecs_disk = subprocess.check_output(find_disk_name, shell=True)
+ecs_disk = ecs_disk.strip()
 
 print "--- Parsed Configuration ---"
 print "Docker Image: %s" % IMAGE
 print "Docker Version: %s" % DOCKERVERSION
+print "Docker Disk: %s" % DOCKERDISK
+print "Running Docker As: %s" % USER
+print "Network Adapter: %s" % NETADAPTER
+print "ECS Disk: %s" % ecs_disk
 
 # Help us Helper Functions!
 
@@ -35,11 +49,11 @@ def install_docker_deps():
     """
     os.system("apt-get install cgroup-lite -y")
 
-def startup_dockerd(device, user):
+def startup_dockerd(docker_device, user):
     """
     start docker daemon
     """
-    docker_dir = prep_docker_disk(device)
+    docker_dir = prep_docker_disk(docker_device)
     docker_log = "/var/vcap/sys/log/ecs_container/pre-start-docker.log"
     fhandle = open(docker_log, 'a')
     try:
@@ -60,17 +74,17 @@ def startup_dockerd(device, user):
             time.sleep(1)
             count += 1
 
-def load_docker_image():
+def load_docker_image(docker_image):
     """
     Load docker image from disk
     """
-    if not os.path.exists(IMAGE):
-        print "The specified docker image file %s does not exist." % IMAGE
+    if not os.path.exists(docker_image):
+        print "The specified docker image file %s does not exist." % docker_image
         sys.exit(1)
-    CORE.docker_load_image(IMAGE)
+    CORE.docker_load_image(docker_image)
     os.system("docker images")
 
-def prep_docker_disk(device):
+def prep_docker_disk(docker_device):
     """
     BOSH only provisions the disk on the IAAS, we need to:
     - Format the disk
@@ -78,13 +92,43 @@ def prep_docker_disk(device):
     - Mount disk to directory
     """
     docker_dir = "/var/vcap/store/docker"
-    os.system("mkfs.ext4 %s" % device)
+    os.system("mkfs.ext4 %s" % docker_device)
     os.system("mkdir -p %s" % docker_dir)
-    os.system("mount -t ext4 %s %s" % (device, docker_dir))
+    os.system("mount -t ext4 %s %s" % (docker_device, docker_dir))
     return docker_dir
 
-#def prep_ecs_disk(device):
+def setup_ecs_networking(adapter):
+    """
+    ECS Requires the /etc/hosts and /etc/hostname
+    to contain all the nodes needed for the ECS cluster.
+    For this release (single node), we only need our ip/hostname
+    """
+    print "Preparing Networking for ECS"
+    CORE.network_file_func(adapter)
+    CORE.seeds_file_func(adapter)
 
+def prep_ecs_disk(ecs_device):
+    """
+    ECS Requires the disk being provided to it be formated correctly,
+    and then "Chunked" into bin folders.
+    We call into ECS core Scripts to help us with this.
+
+    ** We have to move the additional_prep script since the core
+    libraries expect it to be in our current folder. **
+    """
+    print "Preparing Disks for ECS"
+    ecs_disks = [ecs_device]
+    CORE.prepare_data_disk_func(ecs_disks)
+    os.system("cp /var/vcap/packages/ecs_community_edition/ecs-single-node/additional_prep.sh .")
+    os.system("ln -s /bin/grep /usr/bin/grep")
+    CORE.run_additional_prep_file_func(ecs_disks)
+    
 install_docker_deps()
-startup_dockerd(sys.argv[1], "vcap")
-load_docker_image()
+startup_dockerd(DOCKERDISK, USER)
+load_docker_image(IMAGE)
+setup_ecs_networking(NETADAPTER)
+prep_ecs_disk(ecs_disk)
+CORE.directory_files_conf_func()
+print "MADE IT TO THE END!!!"
+
+

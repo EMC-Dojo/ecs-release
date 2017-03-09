@@ -9,22 +9,20 @@ case $1 in
   start)
     mkdir -p $RUN_DIR $LOG_DIR
     chown -R vcap:vcap $RUN_DIR $LOG_DIR
-
-    echo $$ > $PIDFILE
     
-    cd /var/vcap/packages/ecs_bosh
+    cd /var/vcap/packages/docker_1.12.6/
 
-    exec /var/vcap/packages/python_2.7.13/bin/python \
-      hello.py          
+    exec  ./docker run -d -e SS_GENCONFIG=1 -v /ecs:/dae:z -v /host:/host:z -v /var/log/vipr/emcvipr-object:/var/log:z -v /data:/data:z --net=host --name ecsstandalone emccorp/ecs-software-3.0.0 
       >>  $LOG_DIR/ecs_container.stdout.log \
       2>> $LOG_DIR/ecs_container.stderr.log
-
+    echo  "$(./docker inspect -f '{{ .State.Pid }}' ecsstandalone)" > $PIDFILE
     ;;
 
   stop)
-    kill -9 `cat $PIDFILE`
+    cd /var/vcap/packages/docker_1.12.6/
+    
+    ./docker rm -f ecstandalone
     rm -f $PIDFILE
-
     ;;
 
   *)
