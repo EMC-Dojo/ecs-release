@@ -6,10 +6,16 @@ templates:
   pre-start.erb: bin/pre-start
 
 consumes:
-- name: docker
+- name: docker_disk
   type: disk
-- name: ecs
+- name: ecs_disk
   type: disk
+- name: ecs_cluster
+  type: ecs
+
+provides:
+- name: ecs_cluster
+  type: ecs
   
 packages:
 - ecs_bosh

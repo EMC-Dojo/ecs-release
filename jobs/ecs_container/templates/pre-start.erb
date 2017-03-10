@@ -3,4 +3,10 @@
 export PATH=$PATH:/var/vcap/packages/docker_1.12.6
 
 /var/vcap/packages/python_2.7.13/bin/python \
-      /var/vcap/packages/ecs_bosh/pre-start.py /var/vcap/instance/disks/<%= link("docker").p("name") %> /var/vcap/instance/disks/<%= link("ecs").p("name") %>
+      /var/vcap/packages/ecs_bosh/pre-start.py \
+      /var/vcap/instance/disks/<%= link("docker_disk").p("name") %> \
+      /var/vcap/instance/disks/<%= link("ecs_disk").p("name") %> \
+      <%= link('ecs_cluster').instances[0].address %> \
+      <%= link('ecs_cluster').instances[1].address %> \
+      <%= link('ecs_cluster').instances[2].address %> \
+      <%= spec.index %>   

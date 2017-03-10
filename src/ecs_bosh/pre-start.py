@@ -13,8 +13,8 @@ import os
 import time
 import subprocess
 
-sys.path.insert(0, "/var/vcap/packages/ecs_community_edition/ecs-single-node/")
-import step1_ecs_singlenode_install as CORE
+sys.path.insert(0, "/var/vcap/packages/ecs_community_edition/ecs-multi-node/")
+import step1_ecs_multinode_install as CORE
 
 # Config Time!
 ### Need to assign arg[1] to device here instead of passing it directly on line 88
@@ -25,6 +25,9 @@ DOCKERVERSION = "1.12.6"
 NETADAPTER = "eth0"
 DOCKERDISK = sys.argv[1]
 USER = "vcap"
+IPS = [sys.argv[3], sys.argv[4], sys.argv[5]]
+HOSTNAMES = ["ecs0", "ecs1", "ecs2"]
+INSTANCEID = sys.argv[6]
 
 find_disk_name = "ls -l %s" % sys.argv[2]
 find_disk_name += r" | awk '{print $NF}' | sed -e 's/\/.*\///g'"
@@ -39,6 +42,9 @@ print "Docker Disk: %s" % DOCKERDISK
 print "Running Docker As: %s" % USER
 print "Network Adapter: %s" % NETADAPTER
 print "ECS Disk: %s" % ecs_disk
+print "Cluster IPs: %s" % IPS
+print "Cluster Hostnames: %s" % HOSTNAMES
+print "Running Instance ID: %s" % INSTANCEID
 
 # Help us Helper Functions!
 
@@ -97,15 +103,17 @@ def prep_docker_disk(docker_device):
     os.system("mount -t ext4 %s %s" % (docker_device, docker_dir))
     return docker_dir
 
-def setup_ecs_networking(adapter):
+def setup_ecs_networking(adapter, ips, hostnames, instanceid):
     """
     ECS Requires the /etc/hosts and /etc/hostname
     to contain all the nodes needed for the ECS cluster.
     For this release (single node), we only need our ip/hostname
     """
     print "Preparing Networking for ECS"
+    os.system("hostname ecs%s" % (instanceid))
     CORE.network_file_func(adapter)
-    CORE.seeds_file_func(adapter)
+    CORE.seeds_file_func(ips)
+    CORE.hosts_file_func(ips, hostnames)
 
 def prep_ecs_disk(ecs_device):
     """
@@ -119,14 +127,14 @@ def prep_ecs_disk(ecs_device):
     print "Preparing Disks for ECS"
     ecs_disks = [ecs_device]
     CORE.prepare_data_disk_func(ecs_disks)
-    os.system("cp /var/vcap/packages/ecs_community_edition/ecs-single-node/additional_prep.sh .")
+    os.system("cp /var/vcap/packages/ecs_community_edition/ecs-multi-node/additional_prep.sh .")
     os.system("ln -s /bin/grep /usr/bin/grep")
     CORE.run_additional_prep_file_func(ecs_disks)
     
 install_docker_deps()
 startup_dockerd(DOCKERDISK, USER)
 load_docker_image(IMAGE)
-setup_ecs_networking(NETADAPTER)
+setup_ecs_networking(NETADAPTER, IPS, HOSTNAMES, INSTANCEID)
 prep_ecs_disk(ecs_disk)
 CORE.directory_files_conf_func()
 print "MADE IT TO THE END!!!"
