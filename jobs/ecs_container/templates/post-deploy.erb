@@ -1,0 +1,5 @@
+#!/bin/bash
+
+/var/vcap/packages/python_2.7.13/bin/python \
+      /var/vcap/packages/ecs_bosh/post-deploy.py \
+      <%= spec.index %>   
