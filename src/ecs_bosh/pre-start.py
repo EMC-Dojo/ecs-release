@@ -98,7 +98,7 @@ def prep_docker_disk(docker_device):
     - Mount disk to directory
     """
     docker_dir = "/var/vcap/store/docker"
-    os.system("mkfs.ext4 %s" % docker_device)
+    os.system("mkfs.ext4 -F -F %s" % docker_device)
     os.system("mkdir -p %s" % docker_dir)
     os.system("mount -t ext4 %s %s" % (docker_device, docker_dir))
     return docker_dir
