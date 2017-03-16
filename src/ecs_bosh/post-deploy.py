@@ -51,6 +51,7 @@ def poll_auth_service(ecs_node, user, password):
     print "_______________________________________"
 
     res = ""
+    auth_fault=0
     for _ in range(0, 60):
         time.sleep(30)
         curl_command = "curl -i -k https://%s:4443/login -u %s:%s" % (ecs_node, user, password)
@@ -63,8 +64,11 @@ def poll_auth_service(ecs_node, user, password):
             print "Token Success!"
             return
         if re.search("HTTP/1.1 401 Unauthorized\r\n", res):
-            print "Username & Password already changed from defaults!"
-            sys.exit(0)
+            if auth_fault > 0:
+                print "Username & Password already changed from defaults!"
+                sys.exit(0)
+            else:
+                auth_fault += 1
     print "Auth Service Never Started..."
     sys.exit(1)
 
