@@ -50,6 +50,7 @@ def poll_auth_service(ecs_node, user, password):
     print "--| Ensuring the Auth Service is up |--"
     print "_______________________________________"
 
+    res = ""
     for _ in range(0, 60):
         time.sleep(30)
         curl_command = "curl -i -k https://%s:4443/login -u %s:%s" % (ecs_node, user, password)
