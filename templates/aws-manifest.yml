@@ -1,0 +1,44 @@
+---
+name: ecs
+director_uuid: # aaaaa-aaaa-aaaa-aaaa-aaaa <--- REPLACEME with director-uuid `bosh status --uuid`
+
+instance_groups:
+- name: ecs_servers
+  instances: 3
+  azs: #[z1] <--- REPLACEME with az from cloud-config
+  jobs:
+  - name: ecs_container
+    release: ecs-release
+    consumes:
+      ecs_cluster: {from: ecs_servers}
+      docker_disk: {from: docker_disk}
+      ecs_disk: {from: ecs_disk}
+    provides:
+      ecs_cluster: {as: ecs_servers}
+  vm_type: large
+  stemcell: default
+  networks:
+  - name: #default-subnet <---- REPLACEME with name of network in cloud-config
+    default: [dns, gateway]
+    static_ips: #[1.1.1.1,1.1.1.2,1.1.1.3] <--- REPLACEME with static ips from cloud-config
+  persistent_disks:
+  - name: docker_disk
+    type: #small <--- REPLACEME with disktype from cloud-config
+  - name: ecs_disk
+    type: #xlarge  <--- REPLACEME with disktype from cloud-config ATLEAST 120GB!
+
+stemcells:
+- alias: default
+  name: bosh-aws-xen-hvm-ubuntu-trusty-go_agent
+  version: #'3363.9' <--- This version has been tested but others may work
+
+releases:
+  - name: ecs-release
+    version: latest
+
+update:
+  canaries: 1
+  max_in_flight: 3
+  serial: false
+  canary_watch_time: 1000-30000
+  update_watch_time: 1000-30000

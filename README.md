@@ -13,7 +13,7 @@ This release expects the following items:
 - git CLI
 - BOSH CLI
 - BOSH director version 257+ deployed
-- BOSH director with the `enable_post_deploy: true` flag
+- BOSH director with the `enable_post_deploy: true` [flag](https://bosh.io/jobs/director?source=github.com/cloudfoundry/bosh#p=director.enable_post_deploy)
 - BOSH director with a valid cloud-config that has a `disk_types` section with a valid `disk`
 
 ## Deployment Overview
