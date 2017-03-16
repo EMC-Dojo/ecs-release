@@ -15,6 +15,7 @@ This release expects the following items:
 - BOSH director version 257+ deployed
 - BOSH director with the `enable_post_deploy: true` [flag](https://bosh.io/jobs/director?source=github.com/cloudfoundry/bosh#p=director.enable_post_deploy)
 - BOSH director with a valid cloud-config that has a `disk_types` section with a valid `disk`
+- BOSH **Ubuntu** stemcell
 
 ## Deployment Overview
 
@@ -31,8 +32,16 @@ git submodule update --init
 - create the BOSH release and upload to the director
 
 ```bash
-
+bosh -n create release
+bosh -n upload release
 ```
+
+- ensure a stemcell is uploaded and [upload](http://bosh.cloudfoundry.org/stemcells/) if needed 
+
+```bash
+bosh stemcells
+````
+
 
 ## Deployment Examples: AWS and vSphere
 

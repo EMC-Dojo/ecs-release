@@ -18,14 +18,14 @@ instance_groups:
   vm_type: large
   stemcell: default
   networks:
-  - name: #default-subnet <---- REPLACEME with name of network in cloud-config
+  - name: #bosh-ecs-subnet <---- REPLACEME with name of network in cloud-config
     default: [dns, gateway]
     static_ips: #[1.1.1.1,1.1.1.2,1.1.1.3] <--- REPLACEME with static ips from cloud-config
   persistent_disks:
   - name: docker_disk
     type: #small <--- REPLACEME with disktype from cloud-config
   - name: ecs_disk
-    type: #xlarge  <--- REPLACEME with disktype from cloud-config ATLEAST 120GB!
+    type: #xlarge  <--- REPLACEME with disktype from cloud-config tested with atleast 120GB!
 
 stemcells:
 - alias: default

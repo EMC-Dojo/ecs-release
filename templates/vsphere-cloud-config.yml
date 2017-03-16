@@ -1,0 +1,41 @@
+azs:
+- name: z1
+  cloud_properties:
+    datacenters:
+    -  clusters: #[vcenter : {}] <--- REPLACEME vSphere cluster name (usually found in original BOSH director manifest)
+vm_types:
+- name: large
+  cloud_properties:
+    cpu: 4
+    ram: 32768
+    disk: 50_000
+
+disk_types:
+- name: small
+  disk_size: 10_000
+- name: large
+  disk_size: 50_000
+- name: xlarge
+  disk_size: 120_000
+
+networks:
+- name: bosh-ecs-subnet
+  type: manual
+  subnets:
+  # - range: 1.1.1.0/24 <--- REPLACEME with correct subnet information for your vSphere env
+  #   gateway: 1.1.1.1
+  #   dns: [1.1.1.1.2]
+  #   az: z1
+  #   cloud_properties:
+  #     name: "VM Network"
+  #   static:
+  #   - 1.1.1.101 - 1.1.1.103
+  #   reserved:
+  #   - 1.1.1.1 - 1.1.1.100
+  #   - 1.1.1.105 - 1.1.1.255
+compilation:
+  workers: 1
+  az: z1
+  network: bosh-ecs-subnet
+  reuse_compilation_vms: true
+  vm_type: large

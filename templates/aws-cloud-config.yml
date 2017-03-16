@@ -1,0 +1,46 @@
+azs:
+- name: z1
+  cloud_properties: {availability_zone: us-east-1c}
+
+vm_types:
+- name: large
+  cloud_properties:
+     instance_type: m3.xlarge # <--- This size has been tested, need at least 16GB RAM
+    ephemeral_disk: {size: 50000, type: gp2}
+
+disk_types:
+- name: small
+  disk_size: 10_000
+  cloud_properties: {type: gp2}
+- name: large
+  disk_size: 50_000
+  cloud_properties: {type: gp2}
+- name: xlarge # <--- This size disk has been tested for ECS
+  disk_size: 120_000
+  cloud_properties: {type: gp2}
+
+networks:
+- name: bosh-ecs-subnet
+  type: manual
+# - range: 1.1.1.0/24 <--- REPLACEME with correct subnet information for your AWS env
+#   gateway: 1.1.1.1
+#   dns: [1.1.1.1.2]
+#   azs: [z1]
+#   cloud_properties:
+#     security_groups:
+#     - sg-1
+#     subnet: subnet-1
+#   static:
+#   - 1.1.1.101 - 1.1.1.103
+#   reserved:
+#   - 1.1.1.1 - 1.1.1.100
+#   - 1.1.1.105 - 1.1.1.255
+# - name: public
+#   type: vip
+
+compilation:
+  workers: 1
+  az: z1
+  network: bosh-ecs-subnet
+  reuse_compilation_vms: true
+  vm_type: large
