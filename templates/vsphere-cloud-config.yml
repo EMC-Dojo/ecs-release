@@ -3,15 +3,28 @@ azs:
   cloud_properties:
     datacenters:
     -  clusters: #[vcenter : {}] <--- REPLACEME vSphere cluster name (usually found in original BOSH director manifest)
+- name: z2
+  cloud_properties:
+    datacenters:
+    -  clusters: #[vcenter : {}] <--- REPLACEME vSphere cluster name (usually found in original BOSH director manifest)
+- name: z3
+  cloud_properties:
+    datacenters:
+    -  clusters: #[vcenter : {}] <--- REPLACEME vSphere cluster name (usually found in original BOSH director manifest)
 vm_types:
 - name: large
   cloud_properties:
     cpu: 4
     ram: 32768
     disk: 50_000
+- name: small
+  cloud_properties:
+    cpu: 2
+    ram: 8048
+    disk: 20_000
 
 disk_types:
-- name: small
+- name: default
   disk_size: 10_000
 - name: large
   disk_size: 50_000
@@ -19,7 +32,7 @@ disk_types:
   disk_size: 120_000
 
 networks:
-- name: bosh-ecs-subnet
+- name: default
   type: manual
   subnets:
   # - range: 1.1.1.0/24 <--- REPLACEME with correct subnet information for your vSphere env
@@ -36,6 +49,6 @@ networks:
 compilation:
   workers: 1
   az: z1
-  network: bosh-ecs-subnet
+  network: default
   reuse_compilation_vms: true
   vm_type: large
