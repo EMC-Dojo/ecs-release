@@ -4,7 +4,7 @@ name: ecs_container
 templates:
   ctl.erb: bin/ctl
   pre-start.erb: bin/pre-start
-  post-deploy.erb: bin/post-deploy
+
 consumes:
 - name: docker_disk
   type: disk

@@ -2,7 +2,6 @@
 
 """
 This module does everything needed to utilize the ECS CloudFoundry Service Broker
- - only runs if instance 0
  - only runs if the default user credentials were not changed
  - only runs if no license is uploaded
  - only runs if storagepool is not defined
@@ -16,10 +15,9 @@ import re
 import json
 
 
-INSTANCEID = sys.argv[1]
-NODE0 = sys.argv[2]
-NODE1 = sys.argv[3]
-NODE2 = sys.argv[4]
+NODE0 = sys.argv[1]
+NODE1 = sys.argv[2]
+NODE2 = sys.argv[3]
 USERNAME = "root"
 PASSWORD = "ChangeMe"
 STORAGE_POOL = "bosh"
@@ -27,10 +25,9 @@ VIRTUAL_DATA_CENTER = "bosh_vdc"
 REPLICATION_GROUP = "bosh_rep_grp"
 NAMESPACE = "bosh_namespace"
 ALL_NODES = [NODE0, NODE1, NODE2]
-ECS_MGT = sys.argv[5]
+ECS_MGT = sys.argv[4]
 
 print "--- Parsed Configuration ---"
-print "Instance: %s" % INSTANCEID
 print "Username: %s" % USERNAME
 print "Password: %s" % PASSWORD
 print "ECS API endpoint: %s" % ECS_MGT
@@ -123,15 +120,6 @@ def load_license(ecs_node, user, password):
     execute_rest_API("/license", 'POST', '', '', ecs_node,
                      get_auth_token(ecs_node, user, password), contentType='xml')
     return
-
-def check_instance(ecs_node, user, password, instanceid):
-    print "___________________________________"
-    print "--|     Checking Instance ID    |--"
-    print "___________________________________"
-    print "Instance ID: %s" % instanceid
-    if instanceid != "0":
-        print "This post-deploy script only runs on instance 0"
-        sys.exit(0)
 
 def check_storage_pool(ecs_node, user, password, storage_pool):
     print "___________________________________"
@@ -290,7 +278,6 @@ def create_namespace(ecs_node, user, password, rep_group, namespace):
     execute_rest_API("/object/namespaces/namespace", 'POST', '', namespace_payload, ecs_node,
                      get_auth_token(ecs_node, user, password))
 
-check_instance(ECS_MGT, USERNAME, PASSWORD, INSTANCEID)
 poll_auth_service(ECS_MGT, USERNAME, PASSWORD)
 check_license(ECS_MGT, USERNAME, PASSWORD)
 SP_ID = check_storage_pool(ECS_MGT, USERNAME, PASSWORD, STORAGE_POOL)
