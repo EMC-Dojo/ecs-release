@@ -1,10 +1,10 @@
 #!/bin/bash
 
-dir_ip= <%= p('pcf,dir_ip') %>
-dir_user= <%= p('pcf,dir_user') %>
-dir_password= <%= p('pcf,dir_password') %>
+dir_ip= <%= p('pcf.dir_ip') %>
+dir_user= <%= p('pcf.dir_user') %>
+dir_password= <%= p('pcf.dir_password') %>
 
-echo <%= p('pcf,ca_cert') %> > ca_cert
+echo <%= p('pcf.ca_cert') %> > ca_cert
 
 /var/vcap/packages/bosh_cli_2.0.1/bosh \
 alias-env pcf \
