@@ -1,0 +1,55 @@
+---
+name: ecs
+
+instance_groups:
+- name: ecs_servers
+  instances: 3
+  azs: [default]
+  jobs:
+  - name: ecs_container
+    release: ecs-release
+    consumes:
+      ecs_cluster: {from: ecs_servers}
+      docker_disk: {from: docker_disk}
+      ecs_disk: {from: ecs_disk}
+    provides:
+      ecs_cluster: {as: ecs_servers}
+  vm_type: xlarge.mem
+  stemcell: default
+  networks:
+  - name: default
+  persistent_disks:
+  - name: docker_disk
+    type: '153600'
+  - name: ecs_disk
+    type: '2097152'
+- name: ecs_prov_errand
+  instances: 1
+  lifecycle: errand
+  azs: [default]
+  jobs:
+  - name: provision
+    release: ecs-release
+    consumes:
+      ecs_cluster: {from: ecs_servers}
+    lifecycle: errand
+  vm_type: small
+  stemcell: default
+  networks:
+  - name: default
+
+stemcells:
+- alias: default
+  os: ubuntu-trusty
+  version: latest
+
+releases:
+  - name: ecs-release
+    version: latest
+
+update:
+  canaries: 1
+  max_in_flight: 3
+  serial: false
+  canary_watch_time: 1000-30000
+  update_watch_time: 1000-30000

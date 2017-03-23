@@ -1,0 +1,4 @@
+set -e -x
+
+tar -xvzf bosh_cli_2.0.1/bosh-cli-2.0.1.tgz
+cp -a bosh ${BOSH_INSTALL_TARGET}

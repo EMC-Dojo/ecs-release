@@ -11,3 +11,7 @@ python_2.7.13/python-2.7.13.tgz:
   object_id: ab3f56f1-5471-412c-8ab7-227016f54c7d
   sha: dce2b862a30099ee48c19a7c34e2d7c2eeff5670
   size: 17076672
+bosh_cli_2.0.1/bosh-cli-2.0.1.tgz:
+  object_id: 0bbcb4ff-9b05-4d04-98c7-02f9c4e4e6e3
+  sha: 39e5f04be7fe06d638bde21a33b8ec9d52ab5fa9
+  size: 5382985

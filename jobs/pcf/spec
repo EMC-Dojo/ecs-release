@@ -1,0 +1,11 @@
+---
+name: pcf
+
+templates:
+  run.erb: bin/run
+
+consumes:
+
+packages:
+- python_2.7.13
+- ecs_bosh
