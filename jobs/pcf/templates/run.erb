@@ -5,10 +5,6 @@ dir_user='<%= p("pcf.dir_user") %>'
 dir_password='<%= p("pcf.dir_password") %>'
 
 echo '<%= p("pcf.ca_cert") %>' > ca_cert
-
-echo $dir_ip
-echo $dir_user
-echo $dir_password
 export HOME=/home
 
 /var/vcap/packages/bosh_cli_2.0.1/bosh \
