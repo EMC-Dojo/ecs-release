@@ -1,18 +1,23 @@
 #!/bin/bash
 
-DIR_IP='<%= p("pcf.dir_ip") %>'
-DIR_USER='<%= p("pcf.dir_user") %>'
-DIR_PASSWORD='<%= p("pcf.dir_password") %>'
+dir_ip='<%= p("pcf.dir_ip") %>'
+dir_user='<%= p("pcf.dir_user") %>'
+dir_password='<%= p("pcf.dir_password") %>'
 
 echo '<%= p("pcf.ca_cert") %>' > ca_cert
 
+echo $dir_ip
+echo $dir_user
+echo $dir_password
+export HOME=/home
+
 /var/vcap/packages/bosh_cli_2.0.1/bosh \
 alias-env pcf \
--e  $DIR_IP \
+-e  $dir_ip \
 --ca-cert=ca_cert
 
-(echo $DIR_USER; echo $DIR_PASSWORD) | /var/vcap/packages/bosh_cli_2.0.1/bosh \
+(echo $dir_user; echo $dir_password) | /var/vcap/packages/bosh_cli_2.0.1/bosh \
 login -e pcf
 
-/var/vcap/packages/bosh_cli_2.0.1/bosh \
--d ecs deploy /var/vcap/packages/ecs_bosh/pcf_manifest.yml -e pcf
+(echo y) | /var/vcap/packages/bosh_cli_2.0.1/bosh \
+ --config="/home/.bosh/config" -d ecs deploy /var/vcap/packages/ecs_bosh/pcf_manifest.yml -e pcf
