@@ -26,57 +26,69 @@ REPLICATION_GROUP = "bosh_rep_grp"
 NAMESPACE = "bosh_namespace"
 ALL_NODES = [NODE0, NODE1, NODE2]
 ECS_MGT = sys.argv[4]
+VERBOSE = False
+if len(sys.argv) > 5:
+    VERBOSE = True
 
-print "--- Parsed Configuration ---"
-print "Username: %s" % USERNAME
-print "Password: %s" % PASSWORD
-print "ECS API endpoint: %s" % ECS_MGT
-print "ECS Node 0: %s" % NODE0
-print "ECS Node 1: %s" % NODE1
-print "ECS Node 2: %s" % NODE2
-print "ECS Storage Pool: %s" % STORAGE_POOL
-print "ECS Virtual Data Center: %s" % VIRTUAL_DATA_CENTER
-print "ECS Replication Group: %s" % REPLICATION_GROUP
-print "ECS Namespace: %s" % NAMESPACE
+if VERBOSE:
+    print "--- Parsed Configuration ---"
+    print "Username: %s" % USERNAME
+    print "Password: %s" % PASSWORD
+    print "ECS API endpoint: %s" % ECS_MGT
+    print "ECS Node 0: %s" % NODE0
+    print "ECS Node 1: %s" % NODE1
+    print "ECS Node 2: %s" % NODE2
+    print "ECS Storage Pool: %s" % STORAGE_POOL
+    print "ECS Virtual Data Center: %s" % VIRTUAL_DATA_CENTER
+    print "ECS Replication Group: %s" % REPLICATION_GROUP
+    print "ECS Namespace: %s" % NAMESPACE
 
 def poll_auth_service(ecs_node, user, password):
     """
     Poll to see if Auth Service is active.
     """
-    print "_______________________________________"
-    print "--| Ensuring the Auth Service is up |--"
-    print "_______________________________________"
+    if VERBOSE:
+        print "_______________________________________"
+        print "--| Ensuring the Auth Service is up |--"
+        print "_______________________________________"
 
     res = ""
     auth_fault=0
     for _ in range(0, 60):
         time.sleep(30)
         curl_command = "curl -i -k https://%s:4443/login -u %s:%s" % (ecs_node, user, password)
-        print "Getting an Auth Token: %s " % curl_command
+        if VERBOSE:
+            print "Getting an Auth Token: %s " % curl_command
         try:
             res = subprocess.check_output(curl_command, shell=True)
         except Exception as ex:
-            print "Authentication service not yet started, retrying again...."
+            if VERBOSE:
+                print "Authentication service not yet started, retrying again...."
         if re.search("X-SDS-AUTH-TOKEN:(.*)\r\n", res):
-            print "Token Success!"
+            if VERBOSE:
+                print "Token Success!"
             return
         if re.search("HTTP/1.1 401 Unauthorized\r\n", res):
             if auth_fault > 0:
-                print "Username & Password already changed from defaults!"
+                if VERBOSE:
+                    print "Username & Password already changed from defaults!"
                 sys.exit(0)
             else:
                 auth_fault += 1
-    print "Auth Service Never Started..."
+    if VERBOSE:
+        print "Auth Service Never Started..."
     sys.exit(1)
 
 def get_auth_token(ecs_node, user, password):
     curl_command = "curl -i -k https://%s:4443/login -u %s:%s" % (ecs_node, user, password)
-    print "Executing getAuthToken: %s " % curl_command
+    if VERBOSE:
+        print "Executing getAuthToken: %s " % curl_command
     res = subprocess.check_output(curl_command, shell=True)
     auth_token_pattern = "X-SDS-AUTH-TOKEN:(.*)\r\n"
     search_object = re.search(auth_token_pattern, res)
     assert search_object, "Get Auth Token failed"
-    print "Auth Token %s" % search_object.group(1)
+    if VERBOSE:
+        print "Auth Token %s" % search_object.group(1)
     return search_object.group(1)
 
 def execute_rest_API(url, method, filter, data, ECSNode, auth_tok, contentType='json',checkOutput=0):
@@ -89,7 +101,8 @@ def execute_rest_API(url, method, filter, data, ECSNode, auth_tok, contentType='
     -H 'X-SDS-AUTH-TOKEN:%s' \
     -H 'ACCEPT:application/%s' \
     %s https://%s:4443%s" %(method, contentType, auth_tok, contentType, data, ECSNode, url)
-    print "Executing REST API command: %s " % curlCommand
+    if VERBOSE:
+        print "Executing REST API command: %s " % curlCommand
     if checkOutput:
         jsonResult = subprocess.check_output(curlCommand, shell=True)
         RestOutputDict = {}
@@ -97,48 +110,57 @@ def execute_rest_API(url, method, filter, data, ECSNode, auth_tok, contentType='
         return RestOutputDict
     else:
         res = subprocess.check_output(curlCommand, shell=True)
-        print res
+        if VERBOSE:
+            print res
         return
 
 def check_license(ecs_node, user, password):
-    print "___________________________________"
-    print "--| Checking Status of License  |--"
-    print "___________________________________"
+    if VERBOSE:
+        print "___________________________________"
+        print "--| Checking Status of License  |--"
+        print "___________________________________"
     os.system("cp /var/vcap/packages/ecs_community_edition/ecs-multi-node/license.lic .")
     license_json = execute_rest_API("/license", 'GET', '', '', ecs_node,
                                     get_auth_token(ecs_node, user, password), checkOutput=1)
     if license_json['license_text'] == "The product is not licensed":
-        print "Need to load license!"
+        if VERBOSE:
+            print "Need to load license!"
         load_license(ecs_node, user, password)
     else:
-        print "The product is already licensed"
+        if VERBOSE:
+            print "The product is already licensed"
 
 def load_license(ecs_node, user, password):
-    print "___________________________________"
-    print "--| Loading Open Source License |--"
-    print "___________________________________"
+    if VERBOSE:
+        print "___________________________________"
+        print "--| Loading Open Source License |--"
+        print "___________________________________"
     execute_rest_API("/license", 'POST', '', '', ecs_node,
                      get_auth_token(ecs_node, user, password), contentType='xml')
     return
 
 def check_storage_pool(ecs_node, user, password, storage_pool):
-    print "___________________________________"
-    print "--|   Checking Storage Pools    |--"
-    print "___________________________________"
+    if VERBOSE:
+        print "___________________________________"
+        print "--|   Checking Storage Pools    |--"
+        print "___________________________________"
     storage_pool_json = execute_rest_API("/vdc/data-services/varrays.json", 'GET', '', '',
                                          ecs_node, get_auth_token(ecs_node, user, password),
                                          checkOutput=1)
     for prov_storage_pool in storage_pool_json['varray']:
         if prov_storage_pool['name'] == storage_pool:
-            print "Skipping create, Storage Pool %s found!" % storage_pool
+            if VERBOSE:
+                print "Skipping create, Storage Pool %s found!" % storage_pool
             return prov_storage_pool['id']
-    print "Storage Pool %s not found." % storage_pool
+    if VERBOSE:
+        print "Storage Pool %s not found." % storage_pool
     return create_storage_pool(ecs_node, user, password, storage_pool)
 
 def create_storage_pool(ecs_node, user, password, storage_pool):
-    print "_______________________________________"
-    print "--|   Creating %s Storage Pool    |--" % storage_pool
-    print "_______________________________________"
+    if VERBOSE:
+        print "_______________________________________"
+        print "--|   Creating %s Storage Pool    |--" % storage_pool
+        print "_______________________________________"
     storage_pool_payload = '{\\"name\\":\\"%s\\",\
     \\"description\\":\\"%s\\",\
     \\"isProtected\\":\\"%s\\",\
@@ -148,7 +170,8 @@ def create_storage_pool(ecs_node, user, password, storage_pool):
                                          storage_pool_payload, ecs_node,
                                          get_auth_token(ecs_node, user, password), checkOutput=1)
     storage_pool_id = storage_pool_resp['id']
-    print "Storage Pool %s was created with id %s" % (storage_pool, storage_pool_id)
+    if VERBOSE:
+        print "Storage Pool %s was created with id %s" % (storage_pool, storage_pool_id)
     return storage_pool_id
 
 def check_data_nodes(ecs_node, user, password, nodes, storage_pool_id):
@@ -156,18 +179,21 @@ def check_data_nodes(ecs_node, user, password, nodes, storage_pool_id):
                                       ecs_node, get_auth_token(ecs_node, user, password),
                                       checkOutput=1)
     for node in nodes:
-        print "Checking if node %s is already provisioned" % node
+        if VERBOSE:
+            print "Checking if node %s is already provisioned" % node
         if node not in [x['id'] for x in all_prov_nodes['data_store']]:
             provision_node(ecs_node, user, password, node, storage_pool_id)
         else:
-            print "Node %s already Provisioned!" % node
+            if VERBOSE:
+                print "Node %s already Provisioned!" % node
     return
 
 def provision_node(ecs_node, user, password, new_node, storage_pool_id):
-    print "____________________________________________________________________"
-    print "--|   Creating %s Node & Adding to %s Storage Pool    |--" % (new_node, storage_pool_id)
-    print "--|       THIS CAN TAKE SOME TIME......GO GRAB A COFFEE          |--"
-    print "____________________________________________________________________"
+    if VERBOSE:
+        print "____________________________________________________________________"
+        print "--|   Creating %s Node & Adding to %s Storage Pool    |--" % (new_node, storage_pool_id)
+        print "--|       THIS CAN TAKE SOME TIME......GO GRAB A COFFEE          |--"
+        print "____________________________________________________________________"
     create_node_payload = '{ \\"nodes\\":[\
     {\
     \\"nodeId\\":\\"%s\\",\\"name\\":\\"%s\\",\
@@ -178,10 +204,11 @@ def provision_node(ecs_node, user, password, new_node, storage_pool_id):
     return
 
 def check_nodes_status(ecs_node, user, password, nodes):
-    print "____________________________________________________"
-    print "--|           Ensuring Nodes Are Ready           |--"
-    print "--|   THIS CAN TAKE SOME TIME......PING PONG?    |--"
-    print "____________________________________________________"
+    if VERBOSE:
+        print "____________________________________________________"
+        print "--|           Ensuring Nodes Are Ready           |--"
+        print "--|   THIS CAN TAKE SOME TIME......PING PONG?    |--"
+        print "____________________________________________________"
 
     for node in nodes:
         url = "/vdc/data-stores/commodity/%s" % node
@@ -190,16 +217,18 @@ def check_nodes_status(ecs_node, user, password, nodes):
             node_status = execute_rest_API(url, 'GET', '', '', ecs_node,
                                            get_auth_token(ecs_node, user, password), checkOutput=1)
             if node_status['device_state'] == "readytouse":
-                print "Node %s ready to use!" % node
+                if VERBOSE:
+                    print "Node %s ready to use!" % node
                 node_ready = 1
             else:
                 time.sleep(60)
     return
 
 def check_virtual_data_center(ecs_node, user, password, node, vdc):
-    print "____________________________________________________"
-    print "--|           Checking for BOSH VDC              |--"
-    print "____________________________________________________"
+    if VERBOSE:
+        print "____________________________________________________"
+        print "--|           Checking for BOSH VDC              |--"
+        print "____________________________________________________"
 
     vdc_resp = execute_rest_API('/object/vdcs/vdc/%s' % vdc, 'GET', '', '', ecs_node,
                                 get_auth_token(ecs_node, user, password), checkOutput=1)
@@ -209,11 +238,13 @@ def check_virtual_data_center(ecs_node, user, password, node, vdc):
         return vdc_resp['id']
 
 def create_virtual_data_center(ecs_node, user, password, node, vdc):
-    print "____________________________________________________"
-    print "--|              Creating BOSH VDC               |--"
-    print "____________________________________________________"
+    if VERBOSE:
+        print "____________________________________________________"
+        print "--|              Creating BOSH VDC               |--"
+        print "____________________________________________________"
 
-    print "Adding node %s to virtual data center %s!" % (node, vdc)
+    if VERBOSE:
+        print "Adding node %s to virtual data center %s!" % (node, vdc)
     secret_key = "secret12345"
     insert_vdc_payload = '{\\"vdcName\\":\\"%s\\",\
     \\"interVdcEndPoints\\":\\"%s\\", \
@@ -224,9 +255,10 @@ def create_virtual_data_center(ecs_node, user, password, node, vdc):
     return check_virtual_data_center(ecs_node, user, password, node, vdc)
 
 def check_replication_group(ecs_node, user, password, vdc, sp, group):
-    print "____________________________________________________________"
-    print "--|        Checking for BOSH Replication Group           |--"
-    print "____________________________________________________________"
+    if VERBOSE:
+        print "____________________________________________________________"
+        print "--|        Checking for BOSH Replication Group           |--"
+        print "____________________________________________________________"
 
     rep_group_resp = execute_rest_API('/vdc/data-service/vpools', 'GET', '', '', ecs_node,
                                       get_auth_token(ecs_node, user, password), checkOutput=1)
@@ -238,9 +270,10 @@ def check_replication_group(ecs_node, user, password, vdc, sp, group):
         return create_replication_group(ecs_node, user, password, vdc, sp, group)
 
 def create_replication_group(ecs_node, user, password, vdc, sp, group):
-    print "____________________________________________________________"
-    print "--|           Create BOSH Replication Group              |--"
-    print "____________________________________________________________"
+    if VERBOSE:
+        print "____________________________________________________________"
+        print "--|           Create BOSH Replication Group              |--"
+        print "____________________________________________________________"
 
     rep_group_payload = '{\\"description\\":\\"%s\\",\
     \\"name\\":\\"%s\\", \
@@ -255,9 +288,10 @@ def create_replication_group(ecs_node, user, password, vdc, sp, group):
     return rep_group_resp['id']
 
 def check_namespace(ecs_node, user, password, rep_group, namespace):
-    print "____________________________________________________________"
-    print "--|             Checking for BOSH Namespace              |--"
-    print "____________________________________________________________"
+    if VERBOSE:
+        print "____________________________________________________________"
+        print "--|             Checking for BOSH Namespace              |--"
+        print "____________________________________________________________"
 
     namespace_resp = execute_rest_API('/object/namespaces', 'GET', '', '', ecs_node,
                                       get_auth_token(ecs_node, user, password), checkOutput=1)
@@ -268,9 +302,10 @@ def check_namespace(ecs_node, user, password, rep_group, namespace):
     return
 
 def create_namespace(ecs_node, user, password, rep_group, namespace):
-    print "____________________________________________________________"
-    print "--|               Create BOSH Namespace                  |--"
-    print "____________________________________________________________"
+    if VERBOSE:
+        print "____________________________________________________________"
+        print "--|               Create BOSH Namespace                  |--"
+        print "____________________________________________________________"
 
     namespace_payload = '{\\"namespace\\": \\"%s\\",\
     \\"default_data_services_vpool\\": \\"%s\\"\

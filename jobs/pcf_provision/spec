@@ -1,0 +1,20 @@
+---
+name: pcf_provision
+
+templates:
+  run.erb: bin/run
+
+properties:
+  pcf.dir_ip:
+    description: IP of the BOSH director that we deploy ECS on. (Usually your PCF Director)
+  pcf.dir_user:
+    decription: Username to log into your BOSH director.
+    default: director
+  pcf.dir_password:
+    description: Password to log into your BOSH director.
+  pcf.ca_cert:
+    description: CA Cert used to log into your BOSH director.
+
+packages:
+- bosh_cli_2.0.1
+- ecs_bosh
