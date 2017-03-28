@@ -13,22 +13,28 @@ import time
 import subprocess
 import re
 import json
+import argparse
 
-
-NODE0 = sys.argv[1]
-NODE1 = sys.argv[2]
-NODE2 = sys.argv[3]
-USERNAME = "root"
-PASSWORD = "ChangeMe"
 STORAGE_POOL = "bosh"
 VIRTUAL_DATA_CENTER = "bosh_vdc"
 REPLICATION_GROUP = "bosh_rep_grp"
 NAMESPACE = "bosh_namespace"
-ALL_NODES = [NODE0, NODE1, NODE2]
-ECS_MGT = sys.argv[4]
-VERBOSE = False
-if len(sys.argv) > 5:
-    VERBOSE = True
+parser = argparse.ArgumentParser(description="provision ECS cluster")
+parser.add_argument("scriptname", nargs=1)
+parser.add_argument("nodes", nargs=3)
+parser.add_argument("ecs_mgt", nargs=1)
+parser.add_argument("-v", action="store_true", default=False, dest="verbose")
+parser.add_argument("-u", action="store", default="root", dest="user")
+parser.add_argument("-p", action="store", default="ChangeMe", dest="pwd")
+vals = parser.parse_args(sys.argv)
+ALL_NODES = vals.nodes
+NODE0 = vals.nodes[0]
+NODE1 = vals.nodes[1]
+NODE2 = vals.nodes[2]
+ECS_MGT = vals.ecs_mgt
+VERBOSE = vals.verbose
+USERNAME = vals.user
+PASSWORD = vals.pwd
 
 if VERBOSE:
     print "--- Parsed Configuration ---"
