@@ -1,0 +1,56 @@
+---
+name: ecs
+
+instance_groups:
+- name: ecs_servers
+  instances: 3
+  azs: [<%= p("configurable_properties.server_azs") %>]
+  jobs:
+  - name: ecs_container
+    release: ecs-release
+    consumes:
+      ecs_cluster: {from: ecs_servers}
+      docker_disk: {from: docker_disk}
+      ecs_disk: {from: ecs_disk}
+    provides:
+      ecs_cluster: {as: ecs_servers}
+  vm_type: <%= p("configurable_properties.vm_type") %>
+  stemcell: default
+  vm_extensions: [public_ip]
+  networks:
+  - name: services-network
+  persistent_disks:
+  - name: docker_disk
+    type: '<%= p("configurable_properties.docker_disk") %>'
+  - name: ecs_disk
+    type: '<%= p("configurable_properties.ecs_disk") %>'
+- name: ecs_prov_errand
+  instances: 1
+  lifecycle: errand
+  azs: [<%= p("configurable_properties.provision_az") %>]
+  jobs:
+  - name: provision
+    release: ecs-release
+    consumes:
+      ecs_cluster: {from: ecs_servers}
+    lifecycle: errand
+  vm_type: small
+  stemcell: default
+  networks:
+  - name: <%= p("configurable_properties.network") %>
+
+stemcells:
+- alias: default
+  os: ubuntu-trusty
+  version: latest
+
+releases:
+  - name: ecs-release
+    version: latest
+
+update:
+  canaries: 1
+  max_in_flight: 3
+  serial: false
+  canary_watch_time: 1000-30000
+  update_watch_time: 1000-30000

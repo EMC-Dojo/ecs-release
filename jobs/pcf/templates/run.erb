@@ -16,4 +16,4 @@ alias-env pcf \
 login -e pcf
 
 (echo y) | /var/vcap/packages/bosh_cli_2.0.1/bosh \
- --config="/home/.bosh/config" -d ecs deploy /var/vcap/packages/ecs_bosh/pcf_manifest.yml -e pcf
+ --config="/home/.bosh/config" -d ecs deploy /var/vcap/jobs/pcf/manifest.yml -e pcf

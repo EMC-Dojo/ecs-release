@@ -3,6 +3,7 @@ name: pcf
 
 templates:
   run.erb: bin/run
+  manifest.yml.erb: manifest.yml
 
 properties:
   pcf.dir_ip:
@@ -14,6 +15,18 @@ properties:
     description: Password to log into your BOSH director.
   pcf.ca_cert:
     description: CA Cert used to log into your BOSH director.
+  configurable_properties.vm_type:
+    description: The name of the VM type to use
+  configurable_properties.server_azs:
+    description: The availability zones to deploy the ECS servers, comma separated
+  configurable_properties.network:
+    description: The network name that the servers live on
+  configurable_properties.provision_az:
+    description: The availability zone used to provision ECS
+  configurable_properties.docker_disk:
+    description: The Docker disk type
+  configurable_properties.ecs_disk:
+    description: The ECS disk type
 
 packages:
 - bosh_cli_2.0.1
