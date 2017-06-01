@@ -1,3 +1,6 @@
 [submodule "src/ecs_community_edition"]
 	path = src/ecs_community_edition
 	url = https://github.com/EMCECS/ECS-CommunityEdition.git
+[submodule "src/ecs-cf-service-broker"]
+	path = src/ecs-cf-service-broker
+	url = https://github.com/codedellemc/ecs-cf-service-broker.git

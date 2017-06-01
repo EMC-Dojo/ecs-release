@@ -18,7 +18,7 @@ import argparse
 STORAGE_POOL = "bosh"
 VIRTUAL_DATA_CENTER = "bosh_vdc"
 REPLICATION_GROUP = "bosh_rep_grp"
-NAMESPACE = "bosh_namespace"
+NAMESPACE = "bosh-namespace"
 parser = argparse.ArgumentParser(description="provision ECS cluster")
 parser.add_argument("scriptname", nargs=1)
 parser.add_argument("nodes", nargs=3)
