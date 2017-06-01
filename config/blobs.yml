@@ -15,3 +15,15 @@ bosh_cli_2.0.1/bosh-cli-2.0.1.tgz:
   object_id: 0bbcb4ff-9b05-4d04-98c7-02f9c4e4e6e3
   sha: 39e5f04be7fe06d638bde21a33b8ec9d52ab5fa9
   size: 5382985
+cf_cli_6.23.1/cf-cli_6.23.1_linux_x86-64.tgz:
+  object_id: 76101004-d9e2-4162-aefb-05f4b2d11971
+  sha: a195e99cae5ab17b453b0a0747508c8f3eee5cae
+  size: 6692717
+openjdk_1.8.0_101/openjdk-1.8.0_101-x86_64-trusty.tar.gz:
+  object_id: ddb7df81-cd2e-416e-ae5f-61bbd66df5f7
+  sha: d77ee059e289ae52fb87812f1a2932268427dc26
+  size: 77696717
+openjdk_1.8.0_101/openjdk-1.8.0_101-x86_64-mountainlion.tar.gz:
+  object_id: b0dc656d-ac84-4094-bdb7-b477c2ced988
+  sha: d9374652844bfd7bcdce8f8b605fb57fd76c9e36
+  size: 75550921

@@ -1,0 +1,9 @@
+---
+name: ecs_service_broker
+
+dependencies: []
+
+files:
+- ecs-cf-service-broker/**/*
+- openjdk_1.8.0_101/openjdk-1.8.0_101-x86_64-trusty.tar.gz
+- openjdk_1.8.0_101/openjdk-1.8.0_101-x86_64-mountainlion.tar.gz

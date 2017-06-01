@@ -1,0 +1,7 @@
+#! /bin/bash
+
+set -e
+
+mkdir -p ${BOSH_INSTALL_TARGET}/bin
+tar xvf cf_cli_6.23.1/cf-cli_6.23.1_linux_x86-64.tgz
+cp cf ${BOSH_INSTALL_TARGET}/bin/
