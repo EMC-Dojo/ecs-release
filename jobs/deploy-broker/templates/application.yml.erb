@@ -88,6 +88,23 @@ catalog:
               - Shared object storage
               - 5 GB Storage
               - S3 protocol and HDFS access
+        - id: ecs-nfs-plan-guid
+          name: 5gb-nfs
+          description: Free Trial, file accessible
+          service-settings:
+            file-accessible: true
+            quota:
+              limit: 5
+              warn: 4
+          metadata:
+            costs:
+              - amount:
+                  usd: 5.0
+                unit: MONTHLY
+            bullets:
+              - Multiple Bucket Namespace
+              - 5 GB Storage
+              - S3 protocol and HDFS access
         - id: 89d20694-9ab0-4a98-bc6a-868d6d4ecf31
           name: unlimited
           description: Pay per GB for Month
