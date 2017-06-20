@@ -145,7 +145,7 @@ function modify_app() {
   if [ -n "${BROKER_MANAGEMENT_ENDPOINT}" ]; then
 
     # strip protocol from mgmt endpoint...
-    ecs_ip = $(echo '${BROKER_MANAGEMENT_ENDPOINT}' | sed 's/https*:\/\///')
+    ecs_ip=$(echo "${BROKER_MANAGEMENT_ENDPOINT}" | sed 's/https*:\/\///')
     echo "management ip is: ${ecs_ip}"
 
     echo | openssl s_client -connect ${ecs_ip} 2>&1 | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' > ecs_cert.pem
