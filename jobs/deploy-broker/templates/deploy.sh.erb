@@ -142,14 +142,20 @@ function wait_till_running() {
 function modify_app() {
   pushd $PACKAGE_PATH/$SUBDIR
 
-  if [ -n "${BROKER_CERTIFICATE}" ]; then
+  if [ -n "${BROKER_MANAGEMENT_ENDPOINT}" ]; then
+
+    # strip protocol from mgmt endpoint...
+    ecs_ip = $(echo '${BROKER_MANAGEMENT_ENDPOINT}' | sed 's/https*:\/\///')
+    echo "management ip is: ${ecs_ip}"
+
+    echo | openssl s_client -connect ${ecs_ip} 2>&1 | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' > ecs_cert.pem
 
     mkdir -p ${EXPLODED_APP_FOLDER}
 
     cd ${EXPLODED_APP_FOLDER}
     unzip ${PACKAGE_PATH}/lib/${APP_PREFIX_NAME}*.${EXTENSION_TYPE}
-    cp "$SCRIPT_PATH/../ecs_cert.pem" BOOT-INF/classes/ecs_cert.pem
-    cp "$SCRIPT_PATH/../application.yml" BOOT-INF/classes/application.yml
+    cp "${PACKAGE_PATH}/${SUBDIR}/ecs_cert.pem" BOOT-INF/classes/ecs_cert.pem
+    cp "${SCRIPT_PATH}/../application.yml" BOOT-INF/classes/application.yml
 
     zip -r ${PACKAGE_PATH}/lib/${TARGET_APP} *
 #  else
