@@ -44,8 +44,6 @@ properties:
     description: 'Broker basic auth user'
   ecs_broker.broker.password:
     description: 'Broker basic auth password'
-  ecs_broker.broker.certificate:
-    description: 'Broker Certificate'
   ecs_broker.broker.internal_service_names:
     description: 'Internal service name'
   ecs_broker.management_endpoint:
