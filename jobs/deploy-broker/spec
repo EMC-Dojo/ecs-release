@@ -2,7 +2,6 @@
 name: deploy-broker
 templates:
   deploy.sh.erb: bin/run
-  ecs_cert.pem.erb: ecs_cert.pem
   application.yml.erb: application.yml
   all_open.json.erb: all_open.json
 packages:

@@ -1,10 +1,10 @@
 broker:
-  management-endpoint: <%= properties.managementEndpoint %>
-  namespace: <%= properties.namespace %>
-  object-endpoint: <%= properties.objectEndpoint %>
-  nfs-mount-host: <%= properties.nfsMountHost %>
-  repository-endpoint: <%= properties.repositoryEndpoint %>
-  replication-group: <%= properties.replicationGroup %>
+  management-endpoint: <%= properties.ecs_broker.management_endpoint %>
+  namespace: <%= properties.ecs_broker.namespace %>
+  object-endpoint: <%= properties.ecs_broker.object_endpoint %>
+  nfs-mount-host: <%= properties.ecs_broker.nfs_mount_host %>
+  repository-endpoint: <%= properties.ecs_broker.repository_endpoint %>
+  replication-group: <%= properties.ecs_broker.replication_group %>
   repository-service-id: f3cbab6a-5172-4ff1-a5c7-72990f0ce2aa
   repository-plan-id: 89d20694-9ab0-4a98-bc6a-868d6d4ecf31
   certificate: ecs_cert.pem
