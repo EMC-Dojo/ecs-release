@@ -1,0 +1,115 @@
+---
+name: ecs-broker-aws-ec2
+director_uuid: (( merge ))
+
+instance_groups:
+- name: deploy-broker
+  instances: 1
+  lifecycle: errand
+  azs: [z1]
+  jobs:
+  - name: deploy-broker
+    release: ecs-release
+    lifecycle: errand
+  vm_type: small
+  stemcell: default
+#  networks:
+#  - name: nfsvolume-subnet
+#    default: [dns, gateway]
+#    static_ips: [10.10.200.205]
+#  - name: public
+#    static_ips: [34.200.85.71]
+  networks:
+  - <<: (( merge ))
+
+- name: register-broker
+  instances: 1
+  lifecycle: errand
+  azs: [z1]
+  jobs:
+  - name: register-broker
+    release: ecs-release
+    lifecycle: errand
+  vm_type: small
+  stemcell: default
+  networks:
+  - name: nfsvolume-subnet
+    default: [dns, gateway]
+    static_ips: [10.10.200.205]
+  - name: public
+    static_ips: [34.200.85.71]
+
+- name: destroy-broker
+  instances: 1
+  lifecycle: errand
+  azs: [z1]
+  jobs:
+  - name: destroy-broker
+    release: ecs-release
+    lifecycle: errand
+  vm_type: small
+  stemcell: default
+  networks:
+  - name: nfsvolume-subnet
+    default: [dns, gateway]
+    static_ips: [10.10.200.205]
+  - name: public
+    static_ips: [34.200.85.71]
+
+stemcells:
+- alias: default
+  name: bosh-aws-xen-hvm-ubuntu-trusty-go_agent
+  version: '3363.9'
+
+properties:
+  app_domains: persi.cf-app.com
+  domain: persi.cf-app.com
+  ecs_broker:
+    app_name: ECS
+    app_version: v1
+    app_push:
+      memory: 512
+      org_quota: 1024
+      timeout: 180
+    app_uri: ecs-v1
+    management_endpoint: https://34.206.233.96:4443
+    object_endpoint: http://bosh-namespace.34.206.233.96.nip.io:9020
+    base_url: https://34.206.233.96:4443
+    repository_endpoint: http://bosh-namespace.34.206.233.96.nip.io:9020
+    replication_group: bosh_rep_grp
+    namespace: bosh-namespace
+    repository_user: ecs-cf-broker-user
+    repository_bucket: ecs-cf-broker-repository
+    ecs_username: root
+    ecs_password: ChangeMe
+    prefix: ecs-cf-broker-
+    broker_api_version: 2.10
+    broker:
+      internal_service_names: ecs-bucket
+      password: burrito
+      user: admin
+      certificate: |+
+        NO-LONGER-NEEDED
+    cf:
+      admin_password: burrito
+      admin_user: admin
+    create_open_security_group: false
+    encryption_key: test
+    on_demand_service_plans: {}
+    persistence_store_type: none
+  ssl:
+    skip_cert_verify: true
+  uaa:
+    clients:
+      ecs_broker:
+        secret: test
+
+releases:
+- name: ecs-release
+  version: latest
+
+update:
+  canaries: 1
+  canary_watch_time: 1000-100000
+  max_in_flight: 50
+  update_watch_time: 1000-100000
