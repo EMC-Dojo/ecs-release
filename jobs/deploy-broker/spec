@@ -49,31 +49,31 @@ properties:
     description: 'Broker Certificate'
   ecs_broker.broker.internal_service_names:
     description: 'Internal service name'
-  managementEndpoint:
+  ecs_broker.management_endpoint:
     decription: ECS Management Endpoint
-  objectEndpoint:
+  ecs_broker.object_endpoint:
     description: 'ECS Object Endpoint'
-  nfsMountHost:
+  ecs_broker.nfs_mount_host:
     description: '(optional) ECS Host address for NFS mounts.  If not specified, the hostname will be extracted from the object endpoint.'
-  baseUrl:
+  ecs_broker.base_url:
     description: 'ECS Base URL'
-  repositoryEndpoint:
+  ecs_broker.repository_endpoint:
     description: 'Repository Endpoint'
-  replicationGroup:
+  ecs_broker.replication_group:
     description: 'Replication Group'
-  namespace:
+  ecs_broker.namespace:
     description: 'Namespace'
-  repositoryUser:
+  ecs_broker.repository_user:
     description: 'Repository User'
-  repositoryBucket:
+  ecs_broker.repository_bucket:
     description: 'Repository Bucket'
-  username:
+  ecs_broker.ecs_username:
     description: 'ECS Username'
-  password:
+  ecs_broker.ecs_password:
     description: 'ECS Password'
-  prefix:
+  ecs_broker.prefix:
     description: 'ECS Repository Prefix'
-  brokerApiVersion:
+  ecs_broker.broker_api_version:
     description: 'ECS Broker API Version'
 
   ### ON_DEMAND_PLAN_BEGIN_MARKER
