@@ -51,9 +51,9 @@ print "Running Instance ID: %s" % INSTANCEID
 def install_docker_deps():
     """
     Add dependency to manage cgroups
-    NEED TO FIX THIS IN THE FUTURE --> Find source and add as a dep to docker package
+    NEED TO FIX THIS IN THE FUTURE --> Will not work on CentOS Stemcells (yum based packages vs debian)
     """
-    os.system("apt-get install cgroup-lite -y")
+    os.system("dpkg -i /var/vcap/packages/cgroup_1.9/cgroup-lite_1.9_all.deb")
 
 def startup_dockerd(docker_device, user):
     """
@@ -130,7 +130,7 @@ def prep_ecs_disk(ecs_device):
     os.system("cp /var/vcap/packages/ecs_community_edition/ecs-multi-node/additional_prep.sh .")
     os.system("ln -s /bin/grep /usr/bin/grep")
     CORE.run_additional_prep_file_func(ecs_disks)
-    
+
 install_docker_deps()
 startup_dockerd(DOCKERDISK, USER)
 load_docker_image(IMAGE)
@@ -138,5 +138,3 @@ setup_ecs_networking(NETADAPTER, IPS, HOSTNAMES, INSTANCEID)
 prep_ecs_disk(ecs_disk)
 CORE.directory_files_conf_func()
 print "MADE IT TO THE END!!!"
-
-
