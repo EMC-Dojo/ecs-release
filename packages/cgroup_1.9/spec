@@ -1,0 +1,7 @@
+---
+name: cgroup_1.9
+
+dependencies: []
+
+files:
+- cgroup_1.9/cgroup-lite_1.9_all.deb # http://mirrors.kernel.org/ubuntu/pool/main/c/cgroup-lite/cgroup-lite_1.9_all.deb

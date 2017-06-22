@@ -16,9 +16,10 @@ consumes:
 provides:
 - name: ecs_cluster
   type: ecs
-  
+
 packages:
 - ecs_bosh
 - ecs_community_edition
 - python_2.7.13
 - docker_1.12.6
+- cgroup_1.9
