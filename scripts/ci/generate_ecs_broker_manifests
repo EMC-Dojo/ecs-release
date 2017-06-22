@@ -18,15 +18,15 @@ fi
 
 stubs_path="${environment_path}/stubs"
 templates_path="${environment_path}/templates"
-ecs_stubs="${PWD}/${DEPLOYMENTS_DIR}/ecs-release/stubs"
+ecsrelease_stubs="${PWD}/${DEPLOYMENTS_DIR}/ecs-release/stubs"
 
-mkdir -p generated-manifest-ecs
+mkdir -p generated-manifest-ecs-broker
 
 pushd cf-release
   ./scripts/generate_deployment_manifest \
     ${INFRASTRUCTURE} \
     ${stubs_path}/cf/*.yml \
-    > ../generated-manifest-ecs/cf-deployment.yml
+    > ../generated-manifest-ecs-broker/cf-deployment.yml
 popd
 
 pushd ecs-release
@@ -40,11 +40,11 @@ properties:
 EOF
 
   ./scripts/generate_manifest.sh \
-    ../generated-manifest-ecs/cf-deployment.yml \
-    ${ecs_stubs}/director-uuid.yml \
-    ${ecs_stubs}/iaas.yml \
+    ../generated-manifest-ecs-broker/cf-deployment.yml \
+    ${ecsrelease_stubs}/director-uuid.yml \
+    ${ecsrelease_stubs}/iaas.yml \
     ${PWD}/ecsbroker-creds.yml
 
-  mv ecsbroker-aws-manifest.yml ../generated-manifest-ecs/ecs-manifest.yml
+  mv ecsbroker-aws-manifest.yml ../generated-manifest-ecs-broker/ecs-broker-manifest.yml
 popd
 

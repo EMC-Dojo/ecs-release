@@ -9,7 +9,7 @@ inputs:
   - name: cf-release
 
 outputs:
-  - name: generated-manifest-ecs
+  - name: generated-manifest-ecs-broker
 
 params:
   DEPLOYMENTS_DIR: replace-me
@@ -20,5 +20,5 @@ params:
   INFRASTRUCTURE: replace-me
 
 run:
-  path: ecs-release/scripts/ci/generate_deployment_manifests
+  path: ecs-release/scripts/ci/generate_ecs_broker_manifests
 
