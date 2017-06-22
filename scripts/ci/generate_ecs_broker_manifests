@@ -45,6 +45,6 @@ EOF
     ${ecsrelease_stubs}/iaas.yml \
     ${PWD}/ecsbroker-creds.yml
 
-  mv ecsbroker-aws-manifest.yml ../generated-manifest-ecs-broker/ecs-broker-manifest.yml
+  mv ecsbroker-aws-manifest.yml ../generated-manifest-ecs-broker/ecsbroker-aws-manifest.yml
 popd
 
