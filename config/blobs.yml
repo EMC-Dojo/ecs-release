@@ -8,6 +8,7 @@ cf_cli_6.23.1/cf-cli_6.23.1_linux_x86-64.tgz:
   sha: a195e99cae5ab17b453b0a0747508c8f3eee5cae
 cgroup_1.9/cgroup-lite_1.9_all.deb:
   size: 3918
+  object_id: 85a35079-487f-49f9-591f-965e3e163b1c
   sha: 4aa02c17d9ef33e3373e414afdc125de22e99a7c
 docker_1.12.6/docker-1.12.6.tgz:
   size: 28942109
