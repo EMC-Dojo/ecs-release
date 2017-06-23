@@ -9,14 +9,7 @@ instance_groups:
     release: ecs-release
   lifecycle: errand
   name: deploy-broker
-  networks:
-  - default:
-    - dns
-    - gateway
-    name: nfsvolume-subnet
-  - name: public
-    static_ips:
-    - 34.200.85.71
+  networks: (( properties.errand-vm-networks ))
   stemcell: default
   vm_type: small
 - azs:
@@ -28,14 +21,7 @@ instance_groups:
     release: ecs-release
   lifecycle: errand
   name: register-broker
-  networks:
-  - default:
-    - dns
-    - gateway
-    name: nfsvolume-subnet
-  - name: public
-    static_ips:
-    - 34.200.85.71
+  networks: (( properties.errand-vm-networks ))
   stemcell: default
   vm_type: small
 - azs:
@@ -47,14 +33,7 @@ instance_groups:
     release: ecs-release
   lifecycle: errand
   name: destroy-broker
-  networks:
-  - default:
-    - dns
-    - gateway
-    name: nfsvolume-subnet
-  - name: public
-    static_ips:
-    - 34.200.85.71
+  networks: (( properties.errand-vm-networks ))
   stemcell: default
   vm_type: small
 name: ecs-broker-aws-ec2

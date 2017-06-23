@@ -26,6 +26,8 @@ params:
   OBJECT_ENDPOINT: replace-me
   REPOSITORY_ENDPOINT: replace-me
   ECS_BROKER_SECRET: replace-me
+  ERRAND_SUBNET_NAME: replace-me
+  ERRAND_PUBLIC_IP: replace-me
 run:
   path: ecs-release/scripts/ci/generate_ecs_broker_manifests
 

@@ -18,6 +18,8 @@ check_param ECS_NAMESPACE
 check_param OBJECT_ENDPOINT
 check_param REPOSITORY_ENDPOINT
 check_param ECS_BROKER_SECRET
+check_param ERRAND_PUBLIC_IP
+check_param ERRAND_SUBNET_NAME
 
 environment_path="${PWD}/${DEPLOYMENTS_DIR}"
 
@@ -53,6 +55,15 @@ properties:
     clients:
       ecs_broker:
         secret: ${ECS_BROKER_SECRET}
+  errand-vm-networks:
+  - default:
+    - dns
+    - gateway
+    name: ${ERRAND_SUBNET_NAME}
+  - name: public
+    static_ips:
+    - ${ERRAND_PUBLIC_IP}
+
 EOF
 
   ./scripts/generate_manifest.sh \
