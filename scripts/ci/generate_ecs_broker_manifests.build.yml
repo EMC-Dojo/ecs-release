@@ -6,7 +6,7 @@ rootfs_uri: docker:///cloudfoundry/diego-pipeline
 inputs:
   - name: deployments-persi
   - name: ecs-release
-  - name: cf-release
+#  - name: cf-release
 
 outputs:
   - name: generated-manifest-ecs-broker

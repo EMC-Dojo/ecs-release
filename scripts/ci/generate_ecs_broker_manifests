@@ -22,12 +22,12 @@ ecsrelease_stubs="${PWD}/${DEPLOYMENTS_DIR}/ecs-release/stubs"
 
 mkdir -p generated-manifest-ecs-broker
 
-pushd cf-release
-  ./scripts/generate_deployment_manifest \
-    ${INFRASTRUCTURE} \
-    ${stubs_path}/cf/*.yml \
-    > ../generated-manifest-ecs-broker/cf-deployment.yml
-popd
+#pushd cf-release
+#  ./scripts/generate_deployment_manifest \
+#    ${INFRASTRUCTURE} \
+#    ${stubs_path}/cf/*.yml \
+#    > ../generated-manifest-ecs-broker/cf-deployment.yml
+#popd
 
 pushd ecs-release
 
