@@ -10,15 +10,7 @@ instance_groups:
   lifecycle: errand
   name: deploy-broker
   networks:
-  - default:
-    - dns
-    - gateway
     name: nfsvolume-subnet
-    static_ips:
-    - 10.10.200.205
-  - name: public
-    static_ips:
-    - 34.200.85.71
   stemcell: default
   vm_type: small
 - azs:
@@ -31,15 +23,7 @@ instance_groups:
   lifecycle: errand
   name: register-broker
   networks:
-  - default:
-    - dns
-    - gateway
     name: nfsvolume-subnet
-    static_ips:
-    - 10.10.200.205
-  - name: public
-    static_ips:
-    - 34.200.85.71
   stemcell: default
   vm_type: small
 - azs:
@@ -52,15 +36,7 @@ instance_groups:
   lifecycle: errand
   name: destroy-broker
   networks:
-  - default:
-    - dns
-    - gateway
     name: nfsvolume-subnet
-    static_ips:
-    - 10.10.200.205
-  - name: public
-    static_ips:
-    - 34.200.85.71
   stemcell: default
   vm_type: small
 name: ecs-broker-aws-ec2
@@ -110,7 +86,7 @@ releases:
 stemcells:
 - alias: default
   name: bosh-aws-xen-hvm-ubuntu-trusty-go_agent
-  version: "3363.9"
+  version: latest
 update:
   canaries: 1
   canary_watch_time: 1000-100000
