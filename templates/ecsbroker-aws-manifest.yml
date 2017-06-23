@@ -9,7 +9,8 @@ instance_groups:
     release: ecs-release
   lifecycle: errand
   name: deploy-broker
-  networks: (( properties.errand-vm-networks ))
+  networks:
+  - <<: (( properties.errand-vm-networks ))
   stemcell: default
   vm_type: small
 - azs:
@@ -21,7 +22,8 @@ instance_groups:
     release: ecs-release
   lifecycle: errand
   name: register-broker
-  networks: (( properties.errand-vm-networks ))
+  networks:
+  - <<: (( properties.errand-vm-networks ))
   stemcell: default
   vm_type: small
 - azs:
@@ -33,7 +35,8 @@ instance_groups:
     release: ecs-release
   lifecycle: errand
   name: destroy-broker
-  networks: (( properties.errand-vm-networks ))
+  networks:
+  - <<: (( properties.errand-vm-networks ))
   stemcell: default
   vm_type: small
 name: ecs-broker-aws-ec2
