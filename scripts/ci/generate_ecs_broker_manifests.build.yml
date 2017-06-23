@@ -6,19 +6,26 @@ rootfs_uri: docker:///cloudfoundry/diego-pipeline
 inputs:
   - name: deployments-persi
   - name: ecs-release
-#  - name: cf-release
 
 outputs:
   - name: generated-manifest-ecs-broker
 
 params:
   DEPLOYMENTS_DIR: replace-me
-  ENVIRONMENT_NAME: replace-me
-  BOSH_PASSWORD: replace-me
-  BOSH_TARGET: replace-me
-  BOSH_USERNAME: replace-me
-  INFRASTRUCTURE: replace-me
-
+  CF_APP_DOMAIN: replace-me
+  ECS_BASE_URL: replace-me
+  BROKER_PASSWORD: replace-me
+  BROKER_USER: replace-me
+  CF_PASSWORD: replace-me
+  CF_USER: replace-me
+  ECS_PASSWORD: replace-me
+  ECS_USERNAME: replace-me
+  ENCRYPTION_KEY: replace-me
+  MANAGEMENT_ENDPOINT: replace-me
+  ECS_NAMESPACE: replace-me
+  OBJECT_ENDPOINT: replace-me
+  REPOSITORY_ENDPOINT: replace-me
+  ECS_BROKER_SECRET: replace-me
 run:
   path: ecs-release/scripts/ci/generate_ecs_broker_manifests
 

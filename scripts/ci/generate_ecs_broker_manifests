@@ -3,18 +3,23 @@
 set -e -x -u
 
 source $(pwd)/ecs-release/scripts/ci/utils.sh
-check_param BOSH_TARGET
-check_param BOSH_USERNAME
-check_param BOSH_PASSWORD
-check_param ENVIRONMENT_NAME
 check_param DEPLOYMENTS_DIR
-check_param INFRASTRUCTURE
+check_param CF_APP_DOMAIN
+check_param ECS_BASE_URL
+check_param BROKER_PASSWORD
+check_param BROKER_USER
+check_param CF_PASSWORD
+check_param CF_USER
+check_param ECS_PASSWORD
+check_param ECS_USERNAME
+check_param ENCRYPTION_KEY
+check_param MANAGEMENT_ENDPOINT
+check_param ECS_NAMESPACE
+check_param OBJECT_ENDPOINT
+check_param REPOSITORY_ENDPOINT
+check_param ECS_BROKER_SECRET
 
-if [ -z "$ENVIRONMENT_NAME" ]; then
-  environment_path="${PWD}/${DEPLOYMENTS_DIR}"
-else
-  environment_path="${PWD}/${DEPLOYMENTS_DIR}/${ENVIRONMENT_NAME}"
-fi
+environment_path="${PWD}/${DEPLOYMENTS_DIR}"
 
 stubs_path="${environment_path}/stubs"
 templates_path="${environment_path}/templates"
@@ -22,21 +27,32 @@ ecsrelease_stubs="${PWD}/${DEPLOYMENTS_DIR}/ecs-release/stubs"
 
 mkdir -p generated-manifest-ecs-broker
 
-#pushd cf-release
-#  ./scripts/generate_deployment_manifest \
-#    ${INFRASTRUCTURE} \
-#    ${stubs_path}/cf/*.yml \
-#    > ../generated-manifest-ecs-broker/cf-deployment.yml
-#popd
-
 pushd ecs-release
 
 cat > ${PWD}/ecsbroker-creds.yml << EOF
 ---
 properties:
-  ecsbroker:
-    username: ${BOSH_USERNAME}
-    password: ${BOSH_PASSWORD}
+  app_domains: ${CF_APP_DOMAIN}
+  domain: ${CF_APP_DOMAIN}
+  ecs_broker:
+    base_url: ${ECS_BASE_URL}
+    broker:
+      password: ${BROKER_PASSWORD}
+      user: ${BROKER_USER}
+    cf:
+      admin_password: ${CF_PASSWORD}
+      admin_user: ${CF_USER}
+    ecs_password: ${ECS_PASSWORD}
+    ecs_username: ${ECS_USERNAME}
+    encryption_key: ${ENCRYPTION_KEY}
+    management_endpoint: ${MANAGEMENT_ENDPOINT}
+    namespace: ${ECS_NAMESPACE}
+    object_endpoint: ${OBJECT_ENDPOINT}
+    repository_endpoint: ${REPOSITORY_ENDPOINT}
+  uaa:
+    clients:
+      ecs_broker:
+        secret: ${ECS_BROKER_SECRET}
 EOF
 
   ./scripts/generate_manifest.sh \
