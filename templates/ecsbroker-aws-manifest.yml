@@ -10,7 +10,7 @@ instance_groups:
   lifecycle: errand
   name: deploy-broker
   networks:
-    name: nfsvolume-subnet
+  - name: nfsvolume-subnet
   stemcell: default
   vm_type: small
 - azs:
@@ -23,7 +23,7 @@ instance_groups:
   lifecycle: errand
   name: register-broker
   networks:
-    name: nfsvolume-subnet
+  - name: nfsvolume-subnet
   stemcell: default
   vm_type: small
 - azs:
@@ -36,7 +36,7 @@ instance_groups:
   lifecycle: errand
   name: destroy-broker
   networks:
-    name: nfsvolume-subnet
+  - name: nfsvolume-subnet
   stemcell: default
   vm_type: small
 name: ecs-broker-aws-ec2
