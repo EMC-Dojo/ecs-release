@@ -1,0 +1,119 @@
+director_uuid: (( merge ))
+instance_groups:
+- azs:
+  - z1
+  instances: 1
+  jobs:
+  - lifecycle: errand
+    name: deploy-broker
+    release: ecs-release
+  lifecycle: errand
+  name: deploy-broker
+  networks:
+  - default:
+    - dns
+    - gateway
+    name: nfsvolume-subnet
+    static_ips:
+    - 10.10.200.205
+  - name: public
+    static_ips:
+    - 34.200.85.71
+  stemcell: default
+  vm_type: small
+- azs:
+  - z1
+  instances: 1
+  jobs:
+  - lifecycle: errand
+    name: register-broker
+    release: ecs-release
+  lifecycle: errand
+  name: register-broker
+  networks:
+  - default:
+    - dns
+    - gateway
+    name: nfsvolume-subnet
+    static_ips:
+    - 10.10.200.205
+  - name: public
+    static_ips:
+    - 34.200.85.71
+  stemcell: default
+  vm_type: small
+- azs:
+  - z1
+  instances: 1
+  jobs:
+  - lifecycle: errand
+    name: destroy-broker
+    release: ecs-release
+  lifecycle: errand
+  name: destroy-broker
+  networks:
+  - default:
+    - dns
+    - gateway
+    name: nfsvolume-subnet
+    static_ips:
+    - 10.10.200.205
+  - name: public
+    static_ips:
+    - 34.200.85.71
+  stemcell: default
+  vm_type: small
+name: ecs-broker-aws-ec2
+properties:
+  app_domains: (( merge ))
+  domain: (( merge ))
+  ecs_broker:
+    app_name: ECS
+    app_push:
+      memory: 512
+      org_quota: 1024
+      timeout: 180
+    app_uri: ecs-v1
+    app_version: v1
+    base_url: (( merge ))
+    broker:
+      internal_service_names: ecs-bucket
+      password: (( merge ))
+      user: (( merge ))
+    broker_api_version: 2.1
+    cf:
+      admin_password: (( merge ))
+      admin_user: (( merge ))
+    create_open_security_group: false
+    ecs_password: (( merge ))
+    ecs_username: (( merge ))
+    encryption_key: (( merge ))
+    management_endpoint: (( merge ))
+    namespace: (( merge ))
+    object_endpoint: (( merge ))
+    on_demand_service_plans: {}
+    persistence_store_type: none
+    prefix: ecs-cf-broker-
+    replication_group: bosh_rep_grp
+    repository_bucket: ecs-cf-broker-repository
+    repository_endpoint: (( merge ))
+    repository_user: ecs-cf-broker-user
+  ssl:
+    skip_cert_verify: true
+  uaa:
+    clients:
+      ecs_broker:
+        secret: (( merge ))
+releases:
+- name: ecs-release
+  version: latest
+stemcells:
+- alias: default
+  name: bosh-aws-xen-hvm-ubuntu-trusty-go_agent
+  version: "3363.9"
+update:
+  canaries: 1
+  canary_watch_time: 1000-100000
+  max_in_flight: 50
+  update_watch_time: 1000-100000
+
