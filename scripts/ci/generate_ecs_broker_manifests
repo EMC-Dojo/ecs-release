@@ -40,7 +40,6 @@ properties:
 EOF
 
   ./scripts/generate_manifest.sh \
-    ../generated-manifest-ecs-broker/cf-deployment.yml \
     ${ecsrelease_stubs}/director-uuid.yml \
     ${ecsrelease_stubs}/iaas.yml \
     ${PWD}/ecsbroker-creds.yml
