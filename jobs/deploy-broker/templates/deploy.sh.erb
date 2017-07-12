@@ -176,7 +176,7 @@ function push_app() {
 
     # TODO -- add back in the timeouts and quotas for the app push?  Or remove them from the errand props?
 
-    cf push ${APP_NAME}-${APP_VERSION} -p ${PACKAGE_PATH}/lib/${TARGET_APP} --no-start
+    cf push ${APP_NAME}-${APP_VERSION} -p ${PACKAGE_PATH}/lib/${TARGET_APP} -t 600 --no-start
     cf logs ${APP_NAME}-${APP_VERSION} --recent
   popd
 }
