@@ -1,0 +1,15 @@
+---
+platform: linux
+
+rootfs_uri: docker:///cloudfoundry/diego-pipeline
+
+inputs:
+  - name: ecs-release
+
+outputs: {}
+
+params: {}
+
+run:
+  path: ecs-release/scripts/ci/run-lbats.sh
+
