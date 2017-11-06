@@ -11,5 +11,5 @@ outputs: {}
 params: {}
 
 run:
-  path: ecs-release/scripts/ci/run-lbats.sh
+  path: ecs-release/scripts/ci/run_lbats.sh
 
