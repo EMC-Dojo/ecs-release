@@ -3,7 +3,7 @@ name: ecs
 
 instance_groups:
 - name: ecs_servers
-  instances: 3
+  instances: 6
   azs: [default]
   jobs:
   - name: ecs_container

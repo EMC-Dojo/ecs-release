@@ -25,9 +25,9 @@ DOCKERVERSION = "1.12.6"
 NETADAPTER = "eth0"
 DOCKERDISK = sys.argv[1]
 USER = "vcap"
-IPS = [sys.argv[3], sys.argv[4], sys.argv[5]]
-HOSTNAMES = ["ecs0", "ecs1", "ecs2"]
-INSTANCEID = sys.argv[6]
+IPS = [sys.argv[3], sys.argv[4], sys.argv[5], sys.argv[6], sys.argv[7], sys.argv[8]]
+HOSTNAMES = ["ecs0", "ecs1", "ecs2", "ecs3", "ecs4", "ecs5"]
+INSTANCEID = sys.argv[9]
 
 find_disk_name = "ls -l %s" % sys.argv[2]
 find_disk_name += r" | awk '{print $NF}' | sed -e 's/\/.*\///g'"

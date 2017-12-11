@@ -21,7 +21,7 @@ REPLICATION_GROUP = "bosh_rep_grp"
 NAMESPACE = "bosh-namespace"
 parser = argparse.ArgumentParser(description="provision ECS cluster")
 parser.add_argument("scriptname", nargs=1)
-parser.add_argument("nodes", nargs=3)
+parser.add_argument("nodes", nargs=6)
 parser.add_argument("ecs_mgt", nargs=1)
 parser.add_argument("-v", action="store_true", default=False, dest="verbose")
 parser.add_argument("-u", action="store", default="root", dest="user")
@@ -31,6 +31,9 @@ ALL_NODES = vals.nodes
 NODE0 = vals.nodes[0]
 NODE1 = vals.nodes[1]
 NODE2 = vals.nodes[2]
+NODE3 = vals.nodes[3]
+NODE4 = vals.nodes[4]
+NODE5 = vals.nodes[5]
 ECS_MGT = vals.ecs_mgt[0]
 VERBOSE = vals.verbose
 USERNAME = vals.user
@@ -44,6 +47,9 @@ if VERBOSE:
     print "ECS Node 0: %s" % NODE0
     print "ECS Node 1: %s" % NODE1
     print "ECS Node 2: %s" % NODE2
+    print "ECS Node 3: %s" % NODE3
+    print "ECS Node 4: %s" % NODE4
+    print "ECS Node 5: %s" % NODE5
     print "ECS Storage Pool: %s" % STORAGE_POOL
     print "ECS Virtual Data Center: %s" % VIRTUAL_DATA_CENTER
     print "ECS Replication Group: %s" % REPLICATION_GROUP
