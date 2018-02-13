@@ -1,0 +1,66 @@
+- type: replace
+  path: /releases/-
+  value:
+    name: ecs-release
+    version: latest
+
+- type: replace
+  path: /variables/-
+  value:
+    name: ecs-broker-password
+    type: password
+
+- type: replace
+  path: /instance_groups/-
+  value:
+    name: ecs-broker-deploy
+    instances: 1
+    azs: [z1]
+    lifecycle: errand
+    vm_type: minimal
+    stemcell: default
+    networks: [{name: default}]
+    jobs:
+    - lifecycle: errand
+      name: deploy-broker
+      release: ecs-release
+      properties:
+        app_domains: ((system_domain))
+        domain: ((system_domain))
+        ecs_broker:
+          app_name: ECS
+          app_push:
+            memory: 512
+            org_quota: 1024
+            timeout: 180
+          app_uri: ecs-v1
+          app_version: v1
+          base_url: https://((ecs-ip)):4443
+          broker:
+            internal_service_names: ecs-bucket
+            password: ((ecs-broker-password))
+            user: admin
+          broker_api_version: 2.1
+          cf:
+            admin_password: ((cf_admin_password))
+            admin_user: admin
+          create_open_security_group: false
+          ecs_password: ((ecs-password))
+          ecs_username: ((ecs-username))
+          encryption_key: test
+          management_endpoint: https://((ecs-ip)):4443
+          namespace: bosh-namespace
+          object_endpoint: http://bosh-namespace.((ecs-ip)).nip.io:9020
+          on_demand_service_plans: {}
+          persistence_store_type: none
+          prefix: ecs-cf-broker-
+          replication_group: bosh_rep_grp
+          repository_bucket: ecs-cf-broker-repository
+          repository_endpoint: http://bosh-namespace.((ecs-ip)).nip.io:9020
+          repository_user: ecs-cf-broker-user
+        ssl:
+          skip_cert_verify: true
+        uaa:
+          clients:
+            ecs_broker:
+              secret: test
