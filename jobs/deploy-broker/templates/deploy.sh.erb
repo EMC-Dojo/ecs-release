@@ -136,6 +136,7 @@ function modify_app() {
     echo "management ip is: ${ecs_ip}"
 
     echo | openssl s_client -connect ${ecs_ip} 2>&1 | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' > ecs_cert.pem
+    stat -F ecs_cert.pem
 
     mkdir -p ${EXPLODED_APP_FOLDER}
 
